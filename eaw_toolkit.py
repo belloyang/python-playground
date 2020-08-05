@@ -69,7 +69,11 @@ class EAW_ToolKit:
             except ValueError:
                 print ('Failed to pass JSON:'+ account+':'+password, response.content)
                 continue
-            print (contentJson['code'], contentJson['message'])
+            try:
+                print (contentJson['code'], contentJson['message'])
+            except KeyError:
+                print ('Failed to pass JSON key:'+ account+':'+password, response.content)
+                continue
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
             else: 
