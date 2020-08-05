@@ -64,7 +64,11 @@ class EAW_ToolKit:
             print ('Regesting account:'+ account)
             init_number += 1
             response = self._register(account, password)
-            contentJson = response.json()
+            try:
+                contentJson = response.json()
+            except ValueError:
+                print ('Failed to pass JSON:'+ account+':'+password, response.content)
+                continue
             print (contentJson['code'], contentJson['message'])
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
@@ -74,6 +78,7 @@ class EAW_ToolKit:
                 existing_file.write(account)
                 existing_file.write("\n")
             # time.sleep(0.1)
+            init_number += 1
 
 
     # brute force try password 6 digits password 100000 - 999999
