@@ -1,13 +1,13 @@
 import requests
 import time
 
-class EAW_Tool:
+class EAW_ToolKit:
     
     def __init__(self, host):
         self.host = host
         self.defaultPassword = '123456'
     
-    def login(self, account, password):
+    def _login(self, account, password):
         path='/api/v1/login'
         gzip='gzip'
         lang='ZH'
@@ -19,7 +19,7 @@ class EAW_Tool:
         })
         return res
 
-    def register(self, account, password):
+    def _register(self, account, password):
         path='/api/v1/register'
 
         phone=password
