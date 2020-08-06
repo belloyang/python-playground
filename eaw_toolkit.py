@@ -27,14 +27,12 @@ class EAW_ToolKit:
     def _register(self, account, password):
         path='/api/v1/register'
 
-        phone=password
         gzip='gzip'
         lang='ZH'
         try:
             res = requests.post(self.host+path, data={
                 'account': account,
                 'password': password,
-                'phone': phone,
                 'gzip': gzip,
                 'lang': lang
             })
