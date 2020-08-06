@@ -11,12 +11,17 @@ class EAW_ToolKit:
         path='/api/v1/login'
         gzip='gzip'
         lang='ZH'
-        res = requests.post(self.host+path,data={
-            'account': account,
-            'password': password,
-            'gzip': gzip,
-            'lang': lang
-        })
+        try:
+            res = requests.post(self.host+path,data={
+                'account': account,
+                'password': password,
+                'gzip': gzip,
+                'lang': lang
+            })
+        except (ConnectionError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError) as e:
+            time.sleep(1)
+            print ('Connection error , retry after 1s:' + str(e))
+            return self.login(account, password)
         return res
 
     def _register(self, account, password):
