@@ -40,7 +40,7 @@ class EAW_ToolKit:
             })
         except (ConnectionError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError) as e:
             time.sleep(1)
-            print 'Connection error , retry after 1s:' + str(e)
+            print ('Connection error , retry after 1s:' + str(e))
             return self.register(account, password)
         return res
 
