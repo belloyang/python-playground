@@ -64,8 +64,8 @@ class EAW_ToolKit:
 
     # register from 0 - 9999
     def registerRange(self, begin, end):
-        init_number=begin
-        maximum=end
+        init_number=int(begin)
+        maximum=int(end)
         password='123456'
         existing_account=[]
         existing_file=open('existing.txt','a')
