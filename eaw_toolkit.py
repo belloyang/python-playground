@@ -18,9 +18,9 @@ class EAW_ToolKit:
                 'gzip': gzip,
                 'lang': lang
             })
-        except (ConnectionError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError) as e:
+        except Exception as e:
             time.sleep(1)
-            print ('Connection error , retry after 1s:' + str(e))
+            print ('Exception occurs , retry after 1s:' + str(e))
             return self.login(account, password)
         return res
 
@@ -36,9 +36,9 @@ class EAW_ToolKit:
                 'gzip': gzip,
                 'lang': lang
             })
-        except (ConnectionError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError) as e:
+        except Exception as e:
             time.sleep(1)
-            print ('Connection error , retry after 1s:' + str(e))
+            print ('Exception occurs , retry after 1s:' + str(e))
             return self.register(account, password)
         return res
 
@@ -108,8 +108,11 @@ class EAW_ToolKit:
             except ValueError:
                 print ('Failed to pass JSON:'+ account+':'+password, response.content)
                 continue
-            
-            print ('Login response:' + account+':'+password, contentJson['code'], contentJson['message'])
+            try:
+                print ('Login response:' + account+':'+password, contentJson['code'], contentJson['message'])
+            except KeyError:
+                print ('Failed to pass JSON key:'+ account+':'+password, response.content)
+                continue
             if contentJson['code'] == 0 :
                 print ('Password succeeded:'+ password)
                 targetPwdFile.write(account+':'+password)
