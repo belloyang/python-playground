@@ -62,7 +62,7 @@ class EAW_ToolKit:
         while init_number < maximum:
             account=str(init_number)
             print ('Regesting account:'+ account)
-            init_number += 1
+
             response = self._register(account, password)
             try:
                 contentJson = response.json()
