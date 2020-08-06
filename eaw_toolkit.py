@@ -30,12 +30,19 @@ class EAW_ToolKit:
         phone=password
         gzip='gzip'
         lang='ZH'
-        return requests.post(self.host+path, data={
-            'account': account,
-            'password': password,
-            'gzip': gzip,
-            'lang': lang
-        })
+        try:
+            res = requests.post(self.host+path, data={
+                'account': account,
+                'password': password,
+                'phone': phone,
+                'gzip': gzip,
+                'lang': lang
+            })
+        except (ConnectionError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError) as e:
+            time.sleep(1)
+            print 'Connection error , retry after 1s:' + str(e)
+            return self.register(account, password)
+        return res
 
     # Find account whose password is not 123456
     def findTargetAccount(self):
