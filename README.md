@@ -1,7 +1,11 @@
 # Python Playground
 
-This is an experimental project exploring the module 'requests'. Please use it ethically.
+This is an experimental project exploring the module ['requests'](https://github.com/psf/requests). Please use it ethically.
 
+## Install requests library
+```
+pip install requests
+```
 ## Usage
 ```
 Usage:  main.py [option] [params...]
