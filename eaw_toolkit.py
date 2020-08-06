@@ -114,9 +114,10 @@ class EAW_ToolKit:
                 print ('Failed to pass JSON key:'+ account+':'+password, response.content)
                 continue
             if contentJson['code'] == 0 :
-                print ('Password succeeded:'+ password)
+                print ('Password found:'+ password)
                 targetPwdFile.write(account+':'+password)
                 targetPwdFile.write('\n')
+                return
             # time.sleep(0.01)
             start += 1
         print ('No password found')
