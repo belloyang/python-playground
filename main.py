@@ -88,7 +88,7 @@ else:
     elif sys.argv[1]=='-bl' or sys.argv[1]=='--brute-login':
         if len(sys.argv) < 3 :
             print ("Missing arguments:")
-            print (" [-rr or --register-range] [acount]") 
+            print (" [-bl or --brute-login] [acount]") 
         else:
             readConfig()
             toolkit.bruteForceLogin(str(sys.argv[2]))
