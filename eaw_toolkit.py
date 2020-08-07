@@ -74,7 +74,7 @@ class EAW_ToolKit:
         existing_file=open('existing.txt','a')
         while init_number < maximum:
             account=str(init_number)
-            print ('Regesting account:'+ account)
+            print ('Registering account:'+ account)
 
             response = self._register(account, password)
             try:
