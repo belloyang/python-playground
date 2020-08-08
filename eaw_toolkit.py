@@ -27,7 +27,7 @@ class EAW_ToolKit:
         # print ('Login returns:', res.content)
         return res
 
-    def _register(self, account, password):
+    def _register(self, account, password, code=''):
         path='/api/v1/register'
 
         gzip='gzip'
@@ -37,14 +37,15 @@ class EAW_ToolKit:
                 'account': account,
                 'password': password,
                 'gzip': gzip,
-                'lang': lang
+                'lang': lang,
+                'code': code
             })
         except Exception as e:
             time.sleep(1)
             print ('Exception occurs , retry after 1s:' + str(e))
-            return self._register(account, password)
+            return self._register(account, password, code)
         return res
-
+        
     # Find account whose password is not 123456
     def findTargetAccount(self):
         defaultPassword='123456'
@@ -56,7 +57,8 @@ class EAW_ToolKit:
             account = line.strip()
             response=self._login(account, defaultPassword)
             contentJson=response.json()
-            print ('Login response:' + account, contentJson['code'], contentJson['message'])
+            print ('Login response:' + account, contentJson['code'])
+            print (contentJson['message'])
             if contentJson['code'] == 0:
                 print ('Login default password succeeded for '+ account)
             else:
@@ -83,7 +85,8 @@ class EAW_ToolKit:
                 print ('Failed to pass JSON:'+ account+':'+password, response.content)
                 continue
             try:
-                print (contentJson['code'], contentJson['message'])
+                print (contentJson['code'])
+                print (contentJson['message'])
             except KeyError:
                 print ('Failed to pass JSON key:'+ account+':'+password, response.content)
                 continue
@@ -124,7 +127,8 @@ class EAW_ToolKit:
                 print ('Failed to pass JSON:'+ account+':'+password, response.content)
                 continue
             try:
-                print ('Login response:' + account+':'+password, contentJson['code'], contentJson['message'])
+                print ('Login response:' + account+':'+password, contentJson['code'])
+                print (contentJson['message'])
             except KeyError:
                 print ('Failed to pass JSON key:'+ account+':'+password, response.content)
                 continue
