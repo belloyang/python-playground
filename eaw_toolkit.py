@@ -71,6 +71,7 @@ class EAW_ToolKit:
         code = int(codeBegin)
         maxCode= int(codeEnd)
         validCodeFile = open('valid-code.txt', 'a')
+        validCode = []
         while code < maxCode:
             print ('Registering account:'+ account, code)
             response = self._register(account, self.defaultPassword, code)
@@ -88,11 +89,17 @@ class EAW_ToolKit:
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
                 print ('Save valid code:'+ code)
+                validCode.append(code)
                 validCodeFile.write(code)
                 validCodeFile.write('\n')
 
             code +=1
-            
+        if len(validCode) == 0:
+            print ("No valid code found between", codeBegin, codeEnd)
+        else:
+            print ("Found valid code:", validCode)
+
+
     # register from 0 - 9999
     def registerRange(self, begin, end):
         init_number=int(begin)
