@@ -1,7 +1,13 @@
 from eaw_toolkit import EAW_ToolKit
 import sys
 from os import path
+import enum
+from brute_register_threading import BruteRegisterThreading
 
+global BruteRegister
+global RegisterRange
+BruteRegister = 'BruteRegister'
+RegisterRange = 'RegisterRange'
 
 # Main Process
 global toolkit 
@@ -26,6 +32,9 @@ def listCommands():
     print (" => parameters: [account]")
     print (" -br or --brute-register")
     print (" => parameters: [account] [begin-code] [end-code]")
+    print (" -t or --thread")
+    print ("=> parameters: [TaskName] [num of threads] [account] [begin] [end]")
+    print ("      [Taskname]: BruteRegister or RegisterRange")
 
 
 def configHost(host):
@@ -101,6 +110,35 @@ else:
         else:
             readConfig()
             toolkit.bruteRegister(str(sys.argv[2]),str(sys.argv[3]),str(sys.argv[4]))
+    elif sys.argv[1]=='-t' or sys.argv[1]=='--thread':
+        if len(sys.argv) < 7 :
+            print ("Missing arguments:")
+            print (" [-t or --thread] [TaskName] [num of threads] [account] [begin] [end]")
+            print ("      [Taskname]: BruteRegister or RegisterRange") 
+        else:
+            readConfig()
+            task = str(sys.argv[2])
+            nThread = int(sys.argv[3])
+            account= str(sys.argv[4])
+            beginCode = int(sys.argv[5])
+            endCode = int(sys.argv[6])
+            
+            if task == BruteRegister:
+                workload = int((endCode - beginCode) / nThread)
+                begin = beginCode
+                end = min(begin + workload, endCode)
+                idx = 0
+                while begin < endCode:
+                    BruteRegisterThreading(idx, 'thread'+str(idx), toolkit, account, begin, end).start()
+                    begin = end
+                    end = min(begin + workload, endCode)
+                    idx +=1
+            elif task == RegisterRange:
+                pass # To be implemented
+            else:
+                print ('Incorrect TaskName: BruteRegister or RegisterRange')
+
+
     else:
         print ('Invalid Input')
         listCommands()
