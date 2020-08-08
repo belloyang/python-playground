@@ -24,6 +24,8 @@ def listCommands():
     print (" => parameters: [begin] [end]")
     print (" -bl or --brute-login")
     print (" => parameters: [account]")
+    print (" -br or --brute-register")
+    print (" => parameters: [account] [begin-code] [end-code]")
 
 
 def configHost(host):
@@ -92,6 +94,13 @@ else:
         else:
             readConfig()
             toolkit.bruteForceLogin(str(sys.argv[2]))
+    elif sys.argv[1]=='-br' or sys.argv[1]=='--brute-register':
+        if len(sys.argv) < 5 :
+            print ("Missing arguments:")
+            print (" [-br or --brute-register] [acount] [begin] [end]") 
+        else:
+            readConfig()
+            toolkit.bruteRegister(str(sys.argv[2]),str(sys.argv[3]),str(sys.argv[4]))
     else:
         print ('Invalid Input')
         listCommands()

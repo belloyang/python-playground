@@ -67,28 +67,53 @@ class EAW_ToolKit:
                 targetAccountsFile.write('\n')
 
 
+    def bruteRegister(self, account, codeBegin, codeEnd):
+        code = int(codeBegin)
+        maxCode= int(codeEnd)
+        validCodeFile = open('valid-code', 'a')
+        while code < maxCode:
+            print ('Registering account:'+ account, code)
+            response = self._register(account, self.defaultPassword, code)
+            try:
+                contentJson = response.json()
+            except ValueError:
+                print ('Failed to pass JSON:'+ account+':'+self.defaultPassword, response.content)
+                continue
+            try:
+                print (contentJson['code'])
+                print (contentJson['message'])
+            except KeyError:
+                print ('Failed to pass JSON key:'+ account+':'+self.defaultPassword, response.content)
+                continue
+            if contentJson['code'] == 0:
+                print ('Register account succeeded:' + account)
+                print ('Save valid code:'+ code)
+                validCodeFile.write(code)
+                validCodeFile.write('\n')
+
+            code +=1
+            
     # register from 0 - 9999
     def registerRange(self, begin, end):
         init_number=int(begin)
         maximum=int(end)
-        password='123456'
         existing_account=[]
         existing_file=open('existing.txt','a')
         while init_number < maximum:
             account=str(init_number)
             print ('Registering account:'+ account)
 
-            response = self._register(account, password)
+            response = self._register(account, self.defaultPassword)
             try:
                 contentJson = response.json()
             except ValueError:
-                print ('Failed to pass JSON:'+ account+':'+password, response.content)
+                print ('Failed to pass JSON:'+ account+':'+self.defaultPassword, response.content)
                 continue
             try:
                 print (contentJson['code'])
                 print (contentJson['message'])
             except KeyError:
-                print ('Failed to pass JSON key:'+ account+':'+password, response.content)
+                print ('Failed to pass JSON key:'+ account+':'+self.defaultPassword, response.content)
                 continue
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
