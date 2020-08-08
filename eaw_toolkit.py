@@ -70,7 +70,7 @@ class EAW_ToolKit:
     def bruteRegister(self, account, codeBegin, codeEnd):
         code = int(codeBegin)
         maxCode= int(codeEnd)
-        validCodeFile = open('valid-code', 'a')
+        validCodeFile = open('valid-code.txt', 'a')
         while code < maxCode:
             print ('Registering account:'+ account, code)
             response = self._register(account, self.defaultPassword, code)

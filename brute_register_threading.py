@@ -15,5 +15,5 @@ class BruteRegisterThreading (threading.Thread):
         print ("Starting " + self.name)
         print ("Brute register with code:", self.beginCode, self.endCode)
         self.toolkit.bruteRegister(self.targetAccount, self.beginCode, self.endCode)
-        print "Exiting " + self.name
+        print ("Exiting " + self.name)
 
