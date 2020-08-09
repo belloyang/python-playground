@@ -4,6 +4,8 @@ from os import path
 import enum
 from brute_register_threading import BruteRegisterThreading
 from brute_login_threading import BruteLoginThreading
+from register_range_threading import RegisterRangeThreading
+
 
 if sys.version[0] == '2':
     reload(sys)
@@ -125,9 +127,13 @@ else:
             print ("      [Taskname]: BruteRegister, BruteLogin ([begin] [end] can be ommited) or RegisterRange") 
         else:
             task = str(sys.argv[2])
-            if (task == BruteRegister or task == RegisterRange) and len(sys.argv) < 7:
+            if (task == BruteRegister) and len(sys.argv) < 7:
                 print ("Missing arguments:")
-                print (" [-t or --thread] [BruteRegister or RegisterRange] [num of threads] [account] [begin] [end]")
+                print (" [-t or --thread] [BruteRegister] [num of threads] [account] [begin] [end]")
+                exit(1)
+            elif (task == RegisterRange) and len(sys.argv) < 6:
+                print ("Missing arguments:")
+                print (" [-t or --thread] [RegisterRange] [num of threads] [begin] [end]")
                 exit(1)
             elif task == BruteLogin and len(sys.argv) < 5:
                 print ("Missing arguments:")
@@ -136,10 +142,14 @@ else:
             else:
                 readConfig()
                 nThread = int(sys.argv[3])
-                account= str(sys.argv[4])
-                if task == BruteRegister:
-                    beginCode = int(sys.argv[5])
-                    endCode = int(sys.argv[6])
+                if task == RegisterRange:
+                    beginAccount = int(sys.argv[4])
+                    endAccount = int(sys.argv[5])
+                else:
+                    account= str(sys.argv[4])
+                    if task == BruteRegister:
+                        beginCode = int(sys.argv[5])
+                        endCode = int(sys.argv[6])
             
             if task == BruteRegister:
                 workload = int((endCode - beginCode) / nThread)
@@ -165,9 +175,17 @@ else:
                     idx +=1
                 
             elif task == RegisterRange:
-                pass # To be implemented
+                workload = int(endAccount - beginAccount/nThread)
+                begin = beginAccount
+                end = beginAccount + workload
+                idx=0
+                while begin < endAccount:
+                    RegisterRangeThreading(idx, 'thread' + str(idx), toolkit, begin, end).start()
+                    begin = end
+                    end = min(begin + workload, endAccount)
+                    idx +=1
             else:
-                print ('Incorrect TaskName: BruteRegister or RegisterRange')
+                print ('Incorrect TaskName: BruteRegister, BruteLogin or RegisterRange')
 
 
     else:

@@ -10,6 +10,10 @@ class EAW_ToolKit:
         self.defaultPassword = '123456'
         self.passwordList = []
         self.lang = 'EN'
+        if os.path.isfile('valid-code.txt'):
+            self.registerCode = str(open('valid-code.txt','r').readline().strip())
+        else:
+            self.registerCode = ""
     
     def _login(self, account, password):
         path='/api/v1/login'
@@ -113,11 +117,12 @@ class EAW_ToolKit:
         maximum=int(end)
         existing_account=[]
         existing_file=open('existing.txt','a')
+        
         while init_number < maximum:
             account=str(init_number)
             print ('Registering account:'+ account)
 
-            response = self._register(account, self.defaultPassword)
+            response = self._register(account, self.defaultPassword, self.registerCode)
             try:
                 contentJson = response.json()
             except ValueError:
@@ -131,11 +136,13 @@ class EAW_ToolKit:
                 continue
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
-            else: 
-                print ('Save existing account:' + account)
-                existing_account.append(account)
-                existing_file.write(account)
-                existing_file.write("\n")
+            else:
+                message = contentJson['message']
+                if (self.lang == 'EN' and "already exists" in message) or (self.lang == 'ZH' and "已存在" in message): 
+                    print ('Save existing account:' + account)
+                    existing_account.append(account)
+                    existing_file.write(account)
+                    existing_file.write("\n")
             # time.sleep(0.1)
             init_number += 1
 
