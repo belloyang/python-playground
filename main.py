@@ -102,6 +102,7 @@ else:
             print (" [-bl or --brute-login] [acount]") 
         else:
             readConfig()
+            toolkit.readOrCreatePassList()
             toolkit.bruteForceLogin(str(sys.argv[2]))
     elif sys.argv[1]=='-br' or sys.argv[1]=='--brute-register':
         if len(sys.argv) < 5 :
