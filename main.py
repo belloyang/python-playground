@@ -5,8 +5,9 @@ import enum
 from brute_register_threading import BruteRegisterThreading
 from brute_login_threading import BruteLoginThreading
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+if sys.version[0] == '2':
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
 
 global BruteRegister
 global BruteLogin

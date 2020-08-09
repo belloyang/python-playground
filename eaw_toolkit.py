@@ -95,9 +95,9 @@ class EAW_ToolKit:
                 continue
             if contentJson['code'] == 0:
                 print ('Register account succeeded:' + account)
-                print ('Save valid code:'+ code)
-                validCode.append(code)
-                validCodeFile.write(code)
+                print ('Save valid code:'+ str(code))
+                validCode.append(str(code))
+                validCodeFile.write(str(code))
                 validCodeFile.write('\n')
 
             code +=1
