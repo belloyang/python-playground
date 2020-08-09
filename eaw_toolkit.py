@@ -132,23 +132,41 @@ class EAW_ToolKit:
             # time.sleep(0.1)
             init_number += 1
 
-    def createPassList(self):
+    def readOrCreatePassList(self):
         DICT_PATH='./password_dict'
-        
+        if os.path.isfile(os.path.join(DICT_PATH, 'distinct-pwd.txt')):
+            distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "r", encoding='utf8')
+            numOfLines = num_lines = sum(1 for line in distinctPwdFile)
+            if numOfLines > 0:
+                print ('readlines', numOfLines)
+                distinctPwdFile.seek(0)
+                for line in distinctPwdFile.readlines():
+                    pwd = line.strip()
+                    self.passwordList.append(pwd)
+                print ('1. Collected common passwords:', len(self.passwordList))
+                return
+            distinctPwdFile.close()
+        # distinct-pwd.txt doesn't exist or is empty
+        distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "w", encoding="utf-8")
         for filename in os.listdir(DICT_PATH):
             print ('Read passwords from', filename)
             dict_file=open(os.path.join(DICT_PATH, filename), 'r', encoding='utf8', errors='ignore')
             for line in dict_file.readlines():
                 pwd = line.strip()
                 if len(pwd) >=6:
-                    self.passwordList.append(pwd)
-        print ('Collected common passwords:', len(self.passwordList))
+                    if pwd in self.passwordList:
+                        pass
+                    else:
+                        self.passwordList.append(pwd)
+                        distinctPwdFile.write(str(pwd))
+                        distinctPwdFile.write('\n')
+        print ('2. Collected common passwords:', len(self.passwordList))
 
     # brute force try password 6 digits password 100000 - 999999
     def bruteForceLogin(self, account):
 
         targetPwdFile= open('target-pwd.txt', 'a')
-        self.createPassList()
+        self.readOrCreatePassList()
 
         for pwd in self.passwordList:
             password = str(pwd)
