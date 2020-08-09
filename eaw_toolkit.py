@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import requests
 import time
 import os
@@ -84,8 +85,8 @@ class EAW_ToolKit:
             try:
                 print (contentJson['code'])
                 print (contentJson['message'])
-                message = str(contentJson['message'])
-                if (self.lang == 'EN' and "exists" in message) or (self.lang == 'ZH' and "存在" in message):
+                message = contentJson['message']
+                if (self.lang == 'EN' and "exists" in message) or (self.lang == 'ZH' and "已存在" in message):
                     # account exists, quit
                     print ("Account exists, quit registering", account)
                     os._exit(1)
