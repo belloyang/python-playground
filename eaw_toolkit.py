@@ -8,11 +8,12 @@ class EAW_ToolKit:
         self.host = host
         self.defaultPassword = '123456'
         self.passwordList = []
+        self.lang = 'EN'
     
     def _login(self, account, password):
         path='/api/v1/login'
         gzip='gzip'
-        lang='ZH'
+        lang=self.lang
         try:
             res = requests.post(self.host+path,data={
                 'account': account,
@@ -31,7 +32,7 @@ class EAW_ToolKit:
         path='/api/v1/register'
 
         gzip='gzip'
-        lang='ZH'
+        lang=self.lang
         try:
             res = requests.post(self.host+path, data={
                 'account': account,
