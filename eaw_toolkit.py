@@ -84,6 +84,11 @@ class EAW_ToolKit:
             try:
                 print (contentJson['code'])
                 print (contentJson['message'])
+                message = str(contentJson['message'])
+                if (self.lang == 'EN' and "exists" in message) or (self.lang == 'ZH' and "存在" in message):
+                    # account exists, quit
+                    print ("Account exists, quit registering", account)
+                    os._exit(1)
             except KeyError:
                 print ('Failed to pass JSON key:'+ account+':'+self.defaultPassword, response.content)
                 continue
