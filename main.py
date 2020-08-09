@@ -3,10 +3,13 @@ import sys
 from os import path
 import enum
 from brute_register_threading import BruteRegisterThreading
+from brute_login_threading import BruteLoginThreading
 
 global BruteRegister
+global BruteLogin
 global RegisterRange
 BruteRegister = 'BruteRegister'
+BruteLogin = 'BruteLogin'
 RegisterRange = 'RegisterRange'
 
 # Main Process
@@ -34,7 +37,7 @@ def listCommands():
     print (" => parameters: [account] [begin-code] [end-code]")
     print (" -t or --thread")
     print ("=> parameters: [TaskName] [num of threads] [account] [begin] [end]")
-    print ("      [Taskname]: BruteRegister or RegisterRange")
+    print ("      [Taskname]: BruteRegister, BruteLogin ([begin] [end] can be ommited) or RegisterRange")
 
 
 def configHost(host):
@@ -112,17 +115,27 @@ else:
             readConfig()
             toolkit.bruteRegister(str(sys.argv[2]),str(sys.argv[3]),str(sys.argv[4]))
     elif sys.argv[1]=='-t' or sys.argv[1]=='--thread':
-        if len(sys.argv) < 7 :
+        if len(sys.argv) < 3 :
             print ("Missing arguments:")
             print (" [-t or --thread] [TaskName] [num of threads] [account] [begin] [end]")
-            print ("      [Taskname]: BruteRegister or RegisterRange") 
+            print ("      [Taskname]: BruteRegister, BruteLogin ([begin] [end] can be ommited) or RegisterRange") 
         else:
-            readConfig()
             task = str(sys.argv[2])
-            nThread = int(sys.argv[3])
-            account= str(sys.argv[4])
-            beginCode = int(sys.argv[5])
-            endCode = int(sys.argv[6])
+            if (task == BruteRegister or task == RegisterRange) and len(sys.argv) < 7:
+                print ("Missing arguments:")
+                print (" [-t or --thread] [BruteRegister or RegisterRange] [num of threads] [account] [begin] [end]")
+                exit(1)
+            elif task == BruteLogin and len(sys.argv) < 5:
+                print ("Missing arguments:")
+                print (" [-t or --thread] [BruteLogin] [num of threads] [account]")
+                exit(1)
+            else:
+                readConfig()
+                nThread = int(sys.argv[3])
+                account= str(sys.argv[4])
+                if task == BruteRegister:
+                    beginCode = int(sys.argv[5])
+                    endCode = int(sys.argv[6])
             
             if task == BruteRegister:
                 workload = int((endCode - beginCode) / nThread)
@@ -134,6 +147,19 @@ else:
                     begin = end
                     end = min(begin + workload, endCode)
                     idx +=1
+            elif task == BruteLogin:
+                toolkit.readOrCreatePassList()
+                numOfPwd = len(toolkit.passwordList)
+                workload = int(numOfPwd / nThread)
+                begin = 0
+                end = begin + workload
+                idx=0
+                while begin < numOfPwd+1:
+                    BruteLoginThreading(idx, 'thread' + str(idx), toolkit, account, begin, end).start()
+                    begin = end
+                    end = min(begin + workload, numOfPwd+1)
+                    idx +=1
+                
             elif task == RegisterRange:
                 pass # To be implemented
             else:
