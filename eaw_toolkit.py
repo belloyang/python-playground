@@ -194,7 +194,7 @@ class EAW_ToolKit:
                 targetPwdFile.write('\n')
                 return password
             idx += 1
-        print ('No password found')
+        print ('No password found for', account)
         return ""
 
     
