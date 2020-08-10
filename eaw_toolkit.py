@@ -80,12 +80,18 @@ class EAW_ToolKit:
         validCode = []
         while code < maxCode:
             print ('Registering account:'+ account, code)
-            response = self._register(account, self.defaultPassword, code)
             try:
+                response = self._register(account, self.defaultPassword, code)
+                print ('_register response status:', response.status_code)
+                response.raise_for_status()
                 contentJson = response.json()
             except ValueError:
                 print ('Failed to pass JSON:'+ account+':'+self.defaultPassword, response.content)
                 continue
+            except Exception as err:
+                print ("Exception occurs at _register:", err)
+                continue
+
             try:
                 print (contentJson['code'])
                 print (contentJson['message'])
