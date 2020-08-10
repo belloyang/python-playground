@@ -121,12 +121,17 @@ class EAW_ToolKit:
         while init_number < maximum:
             account=str(init_number)
             print ('Registering account:'+ account)
-
-            response = self._register(account, self.defaultPassword, self.registerCode)
             try:
+                response = self._register(account, self.defaultPassword, self.registerCode)
+                print ('_register response status:', response.status_code)
+                response.raise_for_status()
+            
                 contentJson = response.json()
             except ValueError:
                 print ('Failed to pass JSON:'+ account+':'+self.defaultPassword, response.content)
+                continue
+            except Exception as err:
+                print ("Exception occurs at _register:", err)
                 continue
             try:
                 print (contentJson['code'])
@@ -190,11 +195,17 @@ class EAW_ToolKit:
         while idx < end:
             pwd = self.passwordList[idx]
             password = str(pwd)
-            response = self._login(account, password)
             try:
+                response = self._login(account, password)
+                print ('_login response status:', response.status_code)
+                response.raise_for_status()
+            
                 contentJson = response.json()
             except ValueError:
                 print ('Failed to pass JSON:'+ account+':'+password, response.content)
+                continue
+            except Exception as err:
+                print ("Exception occurs at _login:", err)
                 continue
             try:
                 print ('Login response:' + account+':'+password, contentJson['code'])
