@@ -78,18 +78,35 @@ class EAW_ToolKit:
         targetAccountsFile= open('target.txt', 'a')
         accountLines=existingFile.readlines()
         print (accountLines)
-        for line in accountLines:
+        idx = 0
+        while idx < len(accountLines):
+            line = accountLines[idx]
             account = line.strip()
-            response=self._login(account, defaultPassword)
-            contentJson=response.json()
-            print ('Login response:' + account, contentJson['code'])
-            print (contentJson['message'])
+            try:
+                response=self._login(account, defaultPassword)
+                print ('_login response status:', response.status_code)
+                response.raise_for_status()
+                contentJson=response.json()
+            except ValueError:
+                print ('Failed to pass JSON:'+ account+':'+self.defaultPassword, response.content)
+                continue
+            except Exception as err:
+                print ("Exception occurs at _register:", err)
+                continue
+            try:
+                print ('Login response:' + account, contentJson['code'])
+                print (contentJson['message'])
+            except KeyError:
+                print ('Failed to pass JSON key:'+ account+':'+self.defaultPassword, response.content)
+                continue
+
             if contentJson['code'] == 0:
                 print ('Login default password succeeded for '+ account)
             else:
                 print ('Saving account whose password is not default:'+ account)
                 targetAccountsFile.write(account)
                 targetAccountsFile.write('\n')
+            idx +=1
 
 
     def bruteRegister(self, account, codeBegin, codeEnd):
