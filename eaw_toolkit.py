@@ -2,6 +2,7 @@
 import requests
 import time
 import os
+import random
 
 class EAW_ToolKit:
     
@@ -10,32 +11,50 @@ class EAW_ToolKit:
         self.defaultPassword = '123456'
         self.passwordList = []
         self.lang = 'EN'
+        self.user_agent_list = [
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+        ]
         if os.path.isfile('valid-code.txt'):
             self.registerCode = str(open('valid-code.txt','r').readline().strip())
         else:
             self.registerCode = ""
-    
+    def setupHeader(self):
+        headers = {
+            "Accept-Encoding": "identity",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Host": "ba.wuaisincerely.cn",
+            "Connection": "Keep-Alive",
+        }
+        rand = random.randint(0, len(self.user_agent_list)-1)
+        headers['User-Agent'] = self.user_agent_list[rand]
+        return headers
+
     def _login(self, account, password):
+        custom_headers = self.setupHeader()
         path='/api/v1/login'
         gzip='gzip'
         lang=self.lang
+
         try:
-            res = requests.post(self.host+path,data={
+            res = requests.post(self.host+path, data={
                 'account': account,
                 'password': password,
                 'gzip': gzip,
                 'lang': lang
-            })
+            }, headers=custom_headers)
         except Exception as e:
             time.sleep(1)
             print ('Exception occurs , retry after 1s:' + str(e))
             return self._login(account, password)
-        # print ('Login returns:', res.content)
         return res
 
     def _register(self, account, password, code=''):
         path='/api/v1/register'
-
+        custom_headers = self.setupHeader()
         gzip='gzip'
         lang=self.lang
         try:
@@ -45,7 +64,7 @@ class EAW_ToolKit:
                 'gzip': gzip,
                 'lang': lang,
                 'code': code
-            })
+            }, headers=custom_headers)
         except Exception as e:
             time.sleep(1)
             print ('Exception occurs , retry after 1s:' + str(e))
@@ -204,6 +223,7 @@ class EAW_ToolKit:
             try:
                 response = self._login(account, password)
                 print ('_login response status:', response.status_code)
+
                 response.raise_for_status()
             
                 contentJson = response.json()
