@@ -168,10 +168,10 @@ else:
                 begin = 0
                 end = begin + workload
                 idx=0
-                while begin < numOfPwd+1:
+                while begin < numOfPwd:
                     BruteLoginThreading(idx, 'thread' + str(idx), toolkit, account, begin, end).start()
                     begin = end
-                    end = min(begin + workload, numOfPwd+1)
+                    end = min(begin + workload, numOfPwd)
                     idx +=1
                 
             elif task == RegisterRange:

@@ -154,7 +154,7 @@ class EAW_ToolKit:
     def readOrCreatePassList(self):
         DICT_PATH='./password_dict'
         if os.path.isfile(os.path.join(DICT_PATH, 'distinct-pwd.txt')):
-            distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "r", encoding='utf8')
+            distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "r")
             numOfLines = num_lines = sum(1 for line in distinctPwdFile)
             if numOfLines > 0:
                 print ('readlines', numOfLines)
@@ -166,10 +166,10 @@ class EAW_ToolKit:
                 return
             distinctPwdFile.close()
         # distinct-pwd.txt doesn't exist or is empty
-        distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "w", encoding="utf-8")
+        distinctPwdFile=open(os.path.join(DICT_PATH, 'distinct-pwd.txt'),  "w")
         for filename in os.listdir(DICT_PATH):
             print ('Read passwords from', filename)
-            dict_file=open(os.path.join(DICT_PATH, filename), 'r', encoding='utf8', errors='ignore')
+            dict_file=open(os.path.join(DICT_PATH, filename), 'r')
             for line in dict_file.readlines():
                 pwd = line.strip()
                 if len(pwd) >=6:
@@ -185,7 +185,7 @@ class EAW_ToolKit:
     def bruteForceLogin(self, account, beginIdx=-1, endIdx=-1):
         if beginIdx == -1 or endIdx == -1:
            begin = 0
-           end = len(self.passwordList)+1
+           end = len(self.passwordList)
         else:
             begin= beginIdx
             end = endIdx
