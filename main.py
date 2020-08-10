@@ -175,7 +175,7 @@ else:
                     idx +=1
                 
             elif task == RegisterRange:
-                workload = int(endAccount - beginAccount/nThread)
+                workload = int((endAccount - beginAccount)/nThread)
                 begin = beginAccount
                 end = beginAccount + workload
                 idx=0
