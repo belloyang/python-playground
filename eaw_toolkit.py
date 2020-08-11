@@ -70,7 +70,29 @@ class EAW_ToolKit:
             print ('Exception occurs , retry after 1s:' + str(e))
             return self._register(account, password, code)
         return res
-        
+    # work in progress
+    def changeWithdrawPassword(self, oldPassword):
+        path='/api/user/withdrawals/changePwd'
+        password=self.defaultPassword
+        gzip='gzip'
+        lang=self.lang
+        token=""
+        custom_headers = self.setupHeader()
+
+        try:
+            res = requests.post(self.host+path, data={
+                'oldPassword': oldPassword,
+                'password': password,
+                'gzip': gzip,
+                'lang': lang,
+                'token': token
+            }, headers=custom_headers)
+        except Exception as e:
+            time.sleep(1)
+            print ('Exception occurs , retry after 1s:' + str(e))
+            return self.changeWithdrawPassword(oldPassword)
+        print ('changeWithdrawalPwd returns:', res.status_code, res.content)
+        return res
     # Find account whose password is not 123456
     def findTargetAccount(self):
         defaultPassword='123456'
@@ -159,9 +181,9 @@ class EAW_ToolKit:
         maximum=int(end)
         existing_account=[]
         existing_file=open('existing.txt','a')
-        
+        repeat=0
         while init_number < maximum:
-            account=str(init_number)
+            account= str(init_number) 
             print ('Registering account:'+ account)
             try:
                 response = self._register(account, self.defaultPassword, self.registerCode)
@@ -190,6 +212,13 @@ class EAW_ToolKit:
                     existing_account.append(account)
                     existing_file.write(account)
                     existing_file.write("\n")
+                elif (self.lang == 'EN' and "repeatedly" in message) or (self.lang == 'ZH' and "重复" in message):
+                    if repeat < 10:
+                        repeat +=1
+                        print ("repeat account registeration:", account, repeat)
+                        continue
+                    else:
+                        repeat = 0
             # time.sleep(0.1)
             init_number += 1
 
