@@ -187,7 +187,10 @@ else:
             else:
                 print ('Incorrect TaskName: BruteRegister, BruteLogin or RegisterRange')
 
-
+    elif sys.argv[1]=='-d' or sys.argv[1] == '--debug':
+        readConfig()
+        # Execute temporary code hear for quick debuging
+        toolkit.changeWithdrawPassword('123456')
     else:
         print ('Invalid Input')
         listCommands()
