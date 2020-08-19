@@ -72,7 +72,7 @@ class EAW_ToolKit:
         return res
     # work in progress
     def changeWithdrawPassword(self, oldPassword):
-        path='/api/user/withdrawals/changePwd'
+        path='/api/v1/user/withdrawals/changePwd'
         password=self.defaultPassword
         gzip='gzip'
         lang=self.lang
